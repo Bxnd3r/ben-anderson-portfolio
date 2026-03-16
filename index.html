@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ben Anderson — Experience Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F4F1EC;
+    --cream-dark: #EAE6DF;
+    --ink: #1A1916;
+    --ink-soft: #3D3B36;
+    --ink-muted: #7A776E;
+    --accent: #4A6741;
+    --accent-light: #7A9B6F;
+    --accent-pale: #E8EEE6;
+    --rule: rgba(26,25,22,0.12);
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    width: 32px; height: 32px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.4s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+    transform: translate(-50%, -50%);
+    opacity: 0.5;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    transition: background 0.4s ease, backdrop-filter 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(244,241,236,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: end;
+    padding: 0 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -10%; right: -5%;
+    width: 60vw; height: 80vh;
+    background: radial-gradient(ellipse at center, rgba(74,103,65,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-text {
+    grid-column: 1 / 2;
+    padding-top: 180px;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.3s forwards;
+  }
+  .hero-name {
+    font-family: var(--serif);
+    font-size: clamp(64px, 7vw, 112px);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.5s forwards;
+  }
+  .hero-name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-desc {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    max-width: 460px;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.7s forwards;
+  }
+  .hero-links {
+    display: flex;
+    gap: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.9s forwards;
+  }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    background: var(--ink);
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--accent); transform: translateY(-2px); }
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  .hero-image {
+    grid-column: 2 / 3;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding-top: 120px;
+    opacity: 0;
+    animation: fadeIn 1.2s ease 0.6s forwards;
+  }
+  .hero-photo-wrap {
+    position: relative;
+    width: 340px;
+  }
+  .hero-photo-wrap::before {
+    content: '';
+    position: absolute;
+    top: -12px; left: -12px;
+    right: 12px; bottom: 12px;
+    border: 1px solid var(--accent-light);
+    z-index: 0;
+  }
+  .hero-photo {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    object-position: top center;
+    position: relative;
+    z-index: 1;
+    filter: grayscale(20%);
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeIn 0.8s ease 1.4s forwards;
+  }
+  .hero-scroll span {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    writing-mode: horizontal-tb;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* Section base */
+  section {
+    padding: 120px 48px;
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(36px, 4vw, 60px);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 64px;
+  }
+
+  /* Timeline / About */
+  .about {
+    background: var(--cream);
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .about-left { position: sticky; top: 120px; }
+  .about-bio {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin-bottom: 40px;
+  }
+  .about-bio strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 48px;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -37px; top: 8px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 1.5px solid var(--accent);
+  }
+  .timeline-date {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .timeline-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .timeline-sub {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+  .timeline-desc {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  /* Work / Projects */
+  .work { background: var(--cream-dark); }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .project-card {
+    position: relative;
+    overflow: hidden;
+    background: var(--cream);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .project-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .project-card:nth-child(2) { transition-delay: 0.1s; }
+  .project-card:nth-child(3) { transition-delay: 0.2s; }
+  .project-card:nth-child(4) { transition-delay: 0.3s; }
+  .project-card:nth-child(5) { transition-delay: 0.4s; }
+  .project-card.featured {
+    grid-column: 1 / 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .project-visual {
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: var(--ink);
+    position: relative;
+  }
+  .project-card.featured .project-visual {
+    aspect-ratio: auto;
+    min-height: 400px;
+  }
+  .project-visual img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s ease, filter 0.7s ease;
+    filter: grayscale(30%);
+  }
+  .project-card:hover .project-visual img {
+    transform: scale(1.04);
+    filter: grayscale(0%);
+  }
+  .project-visual-placeholder {
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--ink) 0%, var(--ink-soft) 100%);
+    transition: transform 0.7s ease;
+  }
+  .project-card:hover .project-visual-placeholder {
+    transform: scale(1.04);
+  }
+  .placeholder-icon {
+    font-family: var(--serif);
+    font-size: 80px;
+    color: rgba(244,241,236,0.15);
+    font-style: italic;
+    font-weight: 300;
+  }
+  .project-info {
+    padding: 32px;
+  }
+  .project-card.featured .project-info {
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .project-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .project-title {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .project-card.featured .project-title { font-size: 40px; }
+  .project-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+  }
+  .project-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .project-pill {
+    padding: 4px 12px;
+    background: var(--accent-pale);
+    border: 1px solid rgba(74,103,65,0.2);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .project-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    margin-top: 24px;
+    transition: gap 0.2s, color 0.2s;
+  }
+  .project-arrow:hover { gap: 16px; color: var(--accent); }
+
+  /* Skills */
+  .skills-section {
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .skills-section .section-label { color: var(--accent-light); }
+  .skills-section .section-label::before { background: var(--accent-light); }
+  .skills-section .section-title { color: var(--cream); }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(244,241,236,0.08);
+    border: 1px solid rgba(244,241,236,0.08);
+  }
+  .skill-group {
+    padding: 40px;
+    background: var(--ink);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .skill-group.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .skill-group:nth-child(2) { transition-delay: 0.1s; }
+  .skill-group:nth-child(3) { transition-delay: 0.2s; }
+  .skill-group-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    margin-bottom: 20px;
+  }
+  .skill-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .skill-list li {
+    font-size: 14px;
+    color: rgba(244,241,236,0.7);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .skill-list li::before {
+    content: '';
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    flex-shrink: 0;
+  }
+
+  /* Contact */
+  .contact {
+    background: var(--cream);
+    text-align: center;
+    padding: 160px 48px;
+  }
+  .contact .section-label { justify-content: center; }
+  .contact .section-label::before { display: none; }
+  .contact-title {
+    font-family: var(--serif);
+    font-size: clamp(48px, 6vw, 88px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .contact-title em { font-style: italic; color: var(--accent); }
+  .contact-desc {
+    font-size: 15px;
+    color: var(--ink-soft);
+    max-width: 400px;
+    margin: 0 auto 48px;
+    line-height: 1.7;
+  }
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  /* Footer */
+  footer {
+    background: var(--ink);
+    padding: 40px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer p {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(244,241,236,0.35);
+    letter-spacing: 0.08em;
+  }
+  footer a {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent-light);
+    letter-spacing: 0.08em;
+    text-decoration: none;
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+
+  /* Project modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,25,22,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+  }
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .modal {
+    background: var(--cream);
+    max-width: 800px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    transform: translateY(20px);
+    transition: transform 0.4s ease;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-header {
+    padding: 40px 40px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--ink-muted);
+    transition: color 0.2s;
+    line-height: 1;
+    font-family: var(--sans);
+  }
+  .modal-close:hover { color: var(--ink); }
+  .modal-body { padding: 0 40px 40px; }
+  .modal-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .modal-title {
+    font-family: var(--serif);
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 24px;
+    line-height: 1.1;
+  }
+  .modal-section-head {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+    margin-top: 28px;
+  }
+  .modal-text {
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .modal-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .modal-img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .modal-img-placeholder {
+    width: 100%;
+    height: 220px;
+    background: linear-gradient(135deg, var(--ink) 0%, var(--ink-soft) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .modal-img-label {
+    font-family: var(--serif);
+    font-size: 48px;
+    color: rgba(244,241,236,0.1);
+    font-style: italic;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    .nav-links { gap: 24px; }
+    .hero { grid-template-columns: 1fr; padding: 0 24px 80px; }
+    .hero-image { display: none; }
+    section { padding: 80px 24px; }
+    .about { grid-template-columns: 1fr; }
+    .about-left { position: static; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .project-card.featured { grid-column: 1; grid-template-columns: 1fr; }
+    .skills-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Nav -->
+<nav id="nav">
+  <a href="#" class="nav-logo">Ben Anderson</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <div class="hero-text">
+    <p class="hero-eyebrow">Experience Designer &amp; Researcher</p>
+    <h1 class="hero-name">Ben<br><em>Anderson</em></h1>
+    <p class="hero-desc">Dual MDes/MBA candidate at IIT bridging spatial intuition with business strategy — finding where human experiences break down and designing better ones.</p>
+    <div class="hero-links">
+      <a href="#work" class="btn-primary">View Work →</a>
+      <a href="#contact" class="btn-secondary">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-image">
+    <div class="hero-photo-wrap">
+      <img src="photo.jpg" alt="Ben Anderson" class="hero-photo" id="heroPhoto">
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- About -->
+<section class="about" id="about">
+  <div class="about-left">
+    <div class="section-label reveal">About</div>
+    <h2 class="section-title reveal">A background<br>in <em style="font-family:var(--serif);font-style:italic">systems.</em><br>A focus on<br><em style="font-family:var(--serif);font-style:italic;color:var(--accent)">people.</em></h2>
+    <p class="about-bio reveal">
+      I'm a dual MDes/MBA candidate at IIT with a background in architecture. After four years studying buildings, I spent two more actually building them — working on federal projects for the U.S. Army and Air Force, where I became less interested in the drawings and more interested in the <strong>systems behind them</strong>: how decisions get made, how workflows break down, how people experience the spaces we were designing.<br><br>
+      That curiosity pulled me toward design research and strategy. Now I'm bridging architecture's spatial intuition with business thinking to understand how people experience the world — and where those experiences could be better.
+    </p>
+  </div>
+  <div class="about-right">
+    <div class="section-label reveal" style="margin-bottom:40px">Timeline</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">2025 — Present</div>
+        <div class="timeline-title">Dual MDes / MBA Candidate</div>
+        <div class="timeline-sub">Illinois Institute of Technology — Stuart School of Business &amp; Institute of Design</div>
+        <div class="timeline-desc">Coursework spanning embodied design, user research methods, systems theory, analysis and synthesis, and business strategy.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Feb 2026 — Present</div>
+        <div class="timeline-title">Teaching Assistant — MBA 702</div>
+        <div class="timeline-sub">Managerial Economics: Buyer &amp; Seller Behavior · Stuart School of Business</div>
+        <div class="timeline-desc">Supporting graduate-level instruction in buyer and seller decision-making, behavioral economics, and market dynamics.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2023 — 2025</div>
+        <div class="timeline-title">Architectural Designer</div>
+        <div class="timeline-sub">exp.Federal · Chicago, IL</div>
+        <div class="timeline-desc">Reviewed and synthesized data across 80+ military housing units; collaborated on five federal projects for the U.S. Army, Air Force, and Army Corps of Engineers.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2022 — 2023</div>
+        <div class="timeline-title">Art Liaison &amp; Co-Founder</div>
+        <div class="timeline-sub">The Studio · Champaign, IL</div>
+        <div class="timeline-desc">Helped build a student game design studio from 5 to 45+ members; participated in cross-disciplinary strategy discussions on organizational growth.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2019 — 2023</div>
+        <div class="timeline-title">B.S. Architecture</div>
+        <div class="timeline-sub">University of Illinois Urbana-Champaign</div>
+        <div class="timeline-desc">Four years of spatial systems thinking, technical communication, and design at multiple scales — from urban to material detail.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Work -->
+<section class="work" id="work">
+  <div class="section-label reveal">Selected Work</div>
+  <h2 class="section-title reveal">Projects that<br><em style="font-family:var(--serif);font-style:italic">ask questions.</em></h2>
+  <div class="projects-grid">
+
+    <!-- Featured: MBA Skills Index -->
+    <div class="project-card featured" onclick="openModal('mba')">
+      <div class="project-visual">
+        <div class="project-visual-placeholder">
+          <span class="placeholder-icon">Σ</span>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-tag">Data Research · In Progress · 2025</div>
+        <h3 class="project-title">MBA Skills Index</h3>
+        <p class="project-desc">A web platform benchmarking 320 MBA programs against real-time job market demand — revealing strategic misalignments between business education and what employers actually need. Automated pipeline collects 12K+ job postings, applies clustering analysis, and scores curricula with pedagogy-weighted metrics.</p>
+        <div class="project-meta">
+          <span class="project-pill">Systems Research</span>
+          <span class="project-pill">Data Viz</span>
+          <span class="project-pill">Strategy</span>
+          <span class="project-pill">Python</span>
+          <span class="project-pill">React</span>
+        </div>
+        <a href="#" class="project-arrow" onclick="event.preventDefault(); openModal('mba')">View Project →</a>
+      </div>
+    </div>
+
+    <!-- Mental Health Systems -->
+    <div class="project-card" onclick="openModal('mental')">
+      <div class="project-visual">
+        <div class="project-visual-placeholder">
+          <span class="placeholder-icon">◎</span>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-tag">Systems Theory · Fall 2025</div>
+        <h3 class="project-title">International Student Mental Health</h3>
+        <p class="project-desc">Stakeholder mapping, causal loop diagrams, and intervention frameworks analyzing mental health stressors for international graduate students in the U.S.</p>
+        <div class="project-meta">
+          <span class="project-pill">Systems Mapping</span>
+          <span class="project-pill">Research</span>
+          <span class="project-pill">Stakeholder Analysis</span>
+        </div>
+        <a href="#" class="project-arrow" onclick="event.preventDefault(); openModal('mental')">View Project →</a>
+      </div>
+    </div>
+
+    <!-- Logi Mouse UX -->
+    <div class="project-card" onclick="openModal('logi')">
+      <div class="project-visual">
+        <div class="project-visual-placeholder">
+          <span class="placeholder-icon">⊕</span>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-tag">Inclusive Design · Fall 2025</div>
+        <h3 class="project-title">Logi MX Master — Inclusive Design Audit</h3>
+        <p class="project-desc">A task analysis and inclusive design audit of the Logitech MX Master 3S mouse, uncovering three key exclusion themes and proposing redesigned digital and physical experiences.</p>
+        <div class="project-meta">
+          <span class="project-pill">UX Analysis</span>
+          <span class="project-pill">Inclusive Design</span>
+          <span class="project-pill">Concept Design</span>
+        </div>
+        <a href="#" class="project-arrow" onclick="event.preventDefault(); openModal('logi')">View Project →</a>
+      </div>
+    </div>
+
+    <!-- Diagram Dev -->
+    <div class="project-card" onclick="openModal('diagrams')">
+      <div class="project-visual">
+        <div class="project-visual-placeholder">
+          <span class="placeholder-icon">⟳</span>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-tag">Data Visualization · Spring 2026</div>
+        <h3 class="project-title">Diagram Development</h3>
+        <p class="project-desc">A series of data visualizations translating complex systems into legible visual arguments — including the BP oil spill corporate accountability gap and nitrogen fertilizer's unintended consequences.</p>
+        <div class="project-meta">
+          <span class="project-pill">Information Design</span>
+          <span class="project-pill">Storytelling</span>
+          <span class="project-pill">Systems Thinking</span>
+        </div>
+        <a href="#" class="project-arrow" onclick="event.preventDefault(); openModal('diagrams')">View Project →</a>
+      </div>
+    </div>
+
+    <!-- Architecture -->
+    <div class="project-card featured" onclick="openModal('arch')" style="grid-template-columns: 1.4fr 1fr;">
+      <div class="project-visual">
+        <div class="project-visual-placeholder">
+          <span class="placeholder-icon">□</span>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-tag">Architecture · 2019–2023</div>
+        <h3 class="project-title">Architecture & Spatial Design</h3>
+        <p class="project-desc">Four years of spatial design projects at UIUC — from a food bank in Southern Los Angeles designed around worker visibility and flow efficiency, to a community playground in Albany Park, Chicago. Each project began with understanding how people move through, inhabit, and experience space.</p>
+        <div class="project-meta">
+          <span class="project-pill">Spatial Design</span>
+          <span class="project-pill">Rhino</span>
+          <span class="project-pill">Revit</span>
+          <span class="project-pill">Enscape</span>
+        </div>
+        <a href="#" class="project-arrow" onclick="event.preventDefault(); openModal('arch')">View Project →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Skills -->
+<section class="skills-section" id="skills">
+  <div class="section-label reveal">Capabilities</div>
+  <h2 class="section-title reveal">What I bring<br><em style="font-family:var(--serif);font-style:italic">to the table.</em></h2>
+  <div class="skills-grid">
+    <div class="skill-group">
+      <div class="skill-group-label">Methods</div>
+      <ul class="skill-list">
+        <li>User &amp; Archival Research</li>
+        <li>Systems Mapping &amp; Analysis</li>
+        <li>Synthesis &amp; Insight Development</li>
+        <li>Stakeholder Analysis</li>
+        <li>Journey Mapping</li>
+        <li>Framework &amp; Strategy Design</li>
+        <li>Storytelling &amp; Presentation</li>
+        <li>Spatial &amp; Experience Design</li>
+      </ul>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-label">Design Tools</div>
+      <ul class="skill-list">
+        <li>Figma</li>
+        <li>Adobe Illustrator / InDesign / Photoshop</li>
+        <li>Rhino 3D</li>
+        <li>SketchUp</li>
+        <li>Revit &amp; AutoCAD</li>
+        <li>Enscape (Rendering)</li>
+        <li>Notion</li>
+        <li>Microsoft Office</li>
+      </ul>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-label">Technical &amp; Context</div>
+      <ul class="skill-list">
+        <li>Python (Data Analysis)</li>
+        <li>AI-Assisted Research Methods</li>
+        <li>Data Visualization</li>
+        <li>Behavioral Economics</li>
+        <li>Business Strategy</li>
+        <li>Marketing Strategy</li>
+        <li>Cross-Disciplinary Communication</li>
+        <li>Federal Project Workflows</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact" id="contact">
+  <div class="section-label reveal">Contact</div>
+  <h2 class="contact-title reveal">Let's work on<br>something <em>new.</em></h2>
+  <p class="contact-desc reveal">Open to internship opportunities in experience design, design research, and design strategy for Summer 2026.</p>
+  <div class="contact-links reveal">
+    <a href="mailto:benericanderson@gmail.com" class="btn-primary">benericanderson@gmail.com</a>
+    <a href="https://www.linkedin.com/in/benjamin-anderson-76110920a" target="_blank" class="btn-secondary">LinkedIn →</a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 Ben Anderson</p>
+  <a href="https://benport.notion.site" target="_blank">benport.notion.site</a>
+</footer>
+
+<!-- Modals -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-tag" id="modalTag"></div>
+        <h2 class="modal-title" id="modalTitle"></h2>
+      </div>
+      <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// Cursor
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+function animateRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  cursorRing.style.left = rx + 'px';
+  cursorRing.style.top = ry + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+document.querySelectorAll('a, button, .project-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
+    cursorRing.style.opacity = '0';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+    cursorRing.style.opacity = '0.5';
+  });
+});
+
+// Nav scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Load hero photo
+const heroPhoto = document.getElementById('heroPhoto');
+heroPhoto.src = 'photo.jpg';
+heroPhoto.onerror = () => {
+  heroPhoto.parentElement.innerHTML = '<div style="width:100%;aspect-ratio:3/4;background:linear-gradient(160deg,#2a2a25,#4a6741);display:flex;align-items:center;justify-content:center"><span style="font-family:Cormorant Garamond,serif;font-size:72px;color:rgba(244,241,236,0.2);font-style:italic">BA</span></div>';
+};
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal, .timeline-item, .project-card, .skill-group').forEach(el => observer.observe(el));
+
+// Modal data
+const projects = {
+  mba: {
+    tag: 'Data Research · In Progress · 2025',
+    title: 'MBA Skills Index',
+    overview: 'A web platform benchmarking 320 MBA programs against real-time job market demand. The project addresses a systemic failure in business education: schools are teaching skills that no longer match what employers need, with no transparent tool to measure the gap.',
+    role: 'Solo independent project. Research, data pipeline design, methodology, visualization design, and full-stack implementation.',
+    process: 'Automated web scraping pipeline collects 30 days of job postings (12K+ postings) and applies K-means clustering to identify in-demand skill categories. School curricula are scored using API-driven analysis with pedagogy-weighted metrics — 1.0x for lecture-based content, 1.5x for hands-on learning. Results surface as radar chart visualizations allowing direct school-to-school comparison.',
+    outcome: 'A working prototype identifying significant misalignments between MBA curriculum focus and employer demand across 320 schools. Presented as part of a broader argument about the future of the MBA in an AI-augmented economy.',
+    tools: ['Python', 'PostgreSQL', 'React', 'K-means Clustering', 'API Integration', 'Data Visualization']
+  },
+  mental: {
+    tag: 'Systems Theory · Fall 2025',
+    title: 'International Student Mental Health',
+    overview: 'A systems analysis of mental health stressors faced by international graduate students in U.S. universities — where 50% screen positive for depression, anxiety, eating disorders, or suicidal ideation. The project maps the full stakeholder ecosystem to identify where and how to intervene.',
+    role: 'Team project (Ben, Amelia, Anam) for Intro to Systems Theory. Led stakeholder mapping and intervention framework development.',
+    process: 'Built a multi-layer systems map across niche, regime, and landscape levels. Identified five stakeholder groups — professors, peers, parents, employers, and government — and mapped causal loops showing how each raises or reduces stress. Distinguished rare but severe shocks (visa policy changes) from predictable waves (recruiting seasons) from constant background pressure (peer comparison).',
+    outcome: 'A comprehensive intervention framework targeting the highest-leverage points: making visa/CPT timelines visible, staggering academic deadlines, building peer support structures, and simplifying financial and administrative burdens.',
+    tools: ['Systems Mapping', 'Stakeholder Analysis', 'Causal Loop Diagrams', 'Impact Matrix', 'Niche/Regime/Landscape Framework']
+  },
+  logi: {
+    tag: 'Inclusive Design · Fall 2025',
+    title: 'Logi MX Master — Inclusive Design Audit',
+    overview: 'An inclusive design audit of the Logitech MX Master 3S mouse and its companion Logi+ software. The central question: how does a product marketed as highly customizable actually exclude users — and what would a better experience require?',
+    role: 'Team project with Ean. Led key findings synthesis and inclusion principles framework.',
+    process: 'Conducted a task analysis of the full mouse setup and programming experience. Identified three key exclusion themes: a narrow assumed user (wealthy, abled, creative professional); a high learning barrier with no cognitive support; and a design that assumes personal computer ownership. Each theme was supported with direct evidence from the interface.',
+    outcome: 'Four inclusion principles translated into three redesign concepts: a Sandbox Mode for in-app button testing, a Mini-Map overlay for remembering programmed buttons, and multi-sensorial feedback for connection confirmation.',
+    tools: ['Task Analysis', 'Inclusive Design', 'Concept Sketching', 'UI Mockup', 'Figma']
+  },
+  diagrams: {
+    tag: 'Data Visualization · Spring 2026',
+    title: 'Diagram Development Series',
+    overview: 'A series of diagrams from Diagram Development coursework — each translating a complex dataset or system into a single legible visual argument. The constraint: every design decision must serve the story.',
+    role: 'Solo work.',
+    process: 'Three diagrams produced: (1) A cumulative area chart showing BP\'s systematic underreporting of the Deepwater Horizon spill versus independent expert estimates over 85 days. (2) An illustrated landscape diagram showing how nitrogen fertilizer\'s intended food security benefits create a cascade of unintended environmental consequences. (3) A five-column connection diagram mapping the causal logic of food production sustainability barriers.',
+    outcome: 'Each diagram makes a single argument visible that was previously scattered across text — turning academic content into immediately graspable visual reasoning.',
+    tools: ['Information Design', 'Adobe Illustrator', 'Data Visualization', 'Systems Thinking', 'Visual Storytelling']
+  },
+  arch: {
+    tag: 'Architecture · 2019–2023',
+    title: 'Architecture & Spatial Design',
+    overview: 'Four years of spatial design projects at UIUC, plus two years of professional work on federal government facilities. These projects form the foundation of a process-oriented design approach — every project started by understanding how people move through, inhabit, and experience space before any form was proposed.',
+    role: 'Student and professional design work.',
+    process: 'Projects included: a 100,000+ sqft food bank in Southern Los Angeles designed around worker visibility and supply chain flow; the Albany Park Playground in Chicago, a multi-use community building inspired by Parc de la Villette; Quake-Proof Nexus, a competition entry for earthquake-resilient community infrastructure; and professional federal facility work at exp.Federal including technical drawing sets for U.S. Army and Air Force projects.',
+    outcome: 'A grounding in how physical systems shape human experience — and a recognition that the most interesting design problems live upstream of the drawing, in the decisions about what to build and for whom.',
+    tools: ['Rhino 3D', 'Revit', 'AutoCAD', 'Enscape', 'Adobe Suite', 'Physical Modeling', 'Technical Drawing']
+  }
+};
+
+function openModal(id) {
+  const p = projects[id];
+  document.getElementById('modalTag').textContent = p.tag;
+  document.getElementById('modalTitle').textContent = p.title;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-img-placeholder"><span class="modal-img-label">${p.title.charAt(0)}</span></div>
+    <div class="modal-section-head">Overview</div>
+    <p class="modal-text">${p.overview}</p>
+    <div class="modal-section-head">My Role</div>
+    <p class="modal-text">${p.role}</p>
+    <div class="modal-section-head">Process</div>
+    <p class="modal-text">${p.process}</p>
+    <div class="modal-section-head">Outcome</div>
+    <p class="modal-text">${p.outcome}</p>
+    <div class="modal-section-head">Tools &amp; Methods</div>
+    <div class="modal-pills">${p.tools.map(t => `<span class="project-pill">${t}</span>`).join('')}</div>
+  `;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalBtn();
+}
+function closeModalBtn() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalBtn(); });
+</script>
+</body>
+</html>
