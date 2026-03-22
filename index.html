@@ -117,19 +117,19 @@
   }
   .hero-diagram {
     position: absolute;
-    right: -40px;
+    right: 0;
+    left: 44%;
     top: 50%;
-    transform: translateY(-50%);
-    width: 42vw;
-    max-width: 620px;
+    transform: translateY(-52%);
     pointer-events: none;
     z-index: 0;
   }
   .hero-diagram-img {
     width: 100%;
     height: auto;
-    opacity: 0.6;
+    opacity: 0.55;
     display: block;
+    mix-blend-mode: multiply;
   }
   .hero::before {
     content: '';
@@ -1822,7 +1822,17 @@ function openPDF(filename) {
   const frame = document.getElementById('pdfFrame');
   const overlay = document.getElementById('pdfOverlay');
   if (!frame || !overlay) return;
-  frame.src = embeddedPDFs[filename] || filename;
+  if (embeddedPDFs[filename]) {
+    const dataURI = embeddedPDFs[filename];
+    const b64 = dataURI.split(',')[1];
+    const bytes = atob(b64);
+    const buf = new Uint8Array(bytes.length);
+    for (let i = 0; i < bytes.length; i++) buf[i] = bytes.charCodeAt(i);
+    const blob = new Blob([buf], {type: 'application/pdf'});
+    frame.src = URL.createObjectURL(blob);
+  } else {
+    frame.src = filename;
+  }
   const titleEl = document.getElementById('pdfModalTitle');
   if (titleEl) titleEl.textContent = PDF_TITLES[filename] || filename;
   overlay.classList.add('open');
